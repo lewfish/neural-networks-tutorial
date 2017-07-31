@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -e
+
+if [[ -n "${ML_TUTORIAL_DEBUG}" ]]; then
+    set -x
+fi
+
+PROJECT_ROOT="$(dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )")"
+
+function usage() {
+    echo -n \
+         "Usage: $(basename "$0")
+Run the Jupyter notebook web app in a container
+"
+}
+
+echo $PROJECT_ROOT
+
+if [ "${BASH_SOURCE[0]}" = "${0}" ]
+then
+    docker run --rm -it \
+           -v "$PROJECT_ROOT"/notebooks:/opt/notebooks \
+           -p 6789:6789 \
+           ml-tutorial \
+           jupyter notebook \
+           --ip 0.0.0.0 \
+           --port 6789 \
+           --no-browser \
+           --allow-root \
+           --notebook-dir=/opt/notebooks
+fi
